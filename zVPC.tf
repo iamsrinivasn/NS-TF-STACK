@@ -86,9 +86,41 @@ resource "aws_route_table_association" "webhost_private_rt_associate" {
     route_table_id = aws_route_table.webhost_private_rt.id
 }
 
+# Acquire EIP
+resource "aws_eip" "webhost_natgw_eip" {
+  vpc = true
+    tags = {
+    "Name" = "${var.AWS_ENV}_natgw_eip"
+    "Env" = var.AWS_ENV
+  }
+}  
+  
+# Create NAT Gateway
+resource "aws_nat_gateway" "webhost_nat_gateway" {
+  allocation_id = aws_eip.webhost_natgw_eip.id
+  subnet_id     = aws_subnet.webhost_public_subnet.id
+
+  tags = {
+    "Name" = "${var.AWS_ENV}_natgw"
+    "Env" = var.AWS_ENV
+  }
+
+  # To ensure proper ordering, it is recommended to add an explicit dependency
+  # on the Internet Gateway for the VPC.
+  depends_on = [aws_internet_gateway.webhost_igw]
+}
+
 #  Route to Internet Gateway
 resource "aws_route" "webhost_public_rt" {
     route_table_id = aws_route_table.webhost_public_rt.id
     destination_cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.webhost_igw.id
 }
+
+#  Route to NAT Gateway
+resource "aws_route" "webhost_private_rt" {
+    route_table_id = aws_route_table.webhost_private_rt.id
+    destination_cidr_block = "0.0.0.0/0"
+    gateway_id = aws_nat_gateway.webhost_nat_gateway.id
+}
+
