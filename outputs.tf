@@ -26,3 +26,6 @@ output "out_private_rt_id" {
   value = aws_route_table.webhost_private_rt.id
 }
 
+output "out_ecs_cluster_id" {
+  value = aws_ecs_cluster.webhost_ecs_cluster.id
+}

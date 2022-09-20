@@ -29,7 +29,7 @@ resource "aws_subnet" "webhost_public_subnet" {
     vpc_id = aws_vpc.webhost_vpc.id
     cidr_block = var.PUBLIC_CIDR
     tags = {
-      "Name" = "${var.AWS_ENV}_subnet_${var.PUBLIC_CIDR}",
+      "Name" = "${var.AWS_ENV}_public",
       "Env" = var.AWS_ENV
     }
 }
@@ -39,7 +39,7 @@ resource "aws_subnet" "webhost_private_subnet" {
     vpc_id = aws_vpc.webhost_vpc.id
     cidr_block = var.PRIVATE_CIDR
     tags = {
-      "Name" = "${var.AWS_ENV}_subnet_${var.PRIVATE_CIDR}",
+      "Name" = "${var.AWS_ENV}_private",
       "Env" = var.AWS_ENV
     }
 }
