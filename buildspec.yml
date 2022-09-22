@@ -4,6 +4,10 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
+      - echo output - $AWS_DEFAULT_REGION
+      - echo output - $AWS_ACCOUNT_ID
+      - echo output - $IMAGE_REPO_NAME
+      - echo output - $IMAGE_TAG
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       
   build:
